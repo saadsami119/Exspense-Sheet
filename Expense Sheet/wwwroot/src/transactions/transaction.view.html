@@ -1,10 +1,63 @@
-<form>
-    <div class="form-group"> <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
-      <label for="formGroupExampleInput" class="bmd-label-floating">Example label</label>
-      <input type="text" class="form-control" id="formGroupExampleInput">
-    </div>
-    <div class="form-group bmd-form-group"> <!-- manually specified --> 
-      <label for="formGroupExampleInput2" class="bmd-label-floating">Another label</label>
-      <input type="text" class="form-control" id="formGroupExampleInput2">
-    </div>
-  </form>
+<div class="card" style="width: 50rem;">
+   
+    <div class="card-body">
+        <h1 class="card-title">Transaction</h1>
+        
+        <form [formGroup]="transactionForm">
+            
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="text" class="form-control" id="date" formControlName="dateTime"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="payedTo">Payed To</label>
+                <input type="text" class="form-control" id="payedTo" formControlName="payedTo"/>
+            </div>
+
+            <div class="form-group">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                </div>
+
+            
+            <div class="row">   
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="text" class="form-control" id="amount" formControlName="amount"/>
+                    </div>                        
+                </div>            
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select class="form-control" id="paymentMethod">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>                       
+                </div>                        
+            </div>
+            
+
+            <div class="form-group">
+                <label for="comments">Comments</label>
+                <textarea class="form-control" id="comments" rows="3"></textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-lg btn-block">Create</button>
+        </form>
+
+            
+                 
+  
+</div>
