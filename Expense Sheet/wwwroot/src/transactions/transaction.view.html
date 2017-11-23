@@ -18,12 +18,8 @@
             <div class="form-group">
                     <label for="category">Category</label>
                     <select class="form-control" id="category">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
+                        <option *ngFor="let category of categoryCollection">{{category.name}}</option>                      
+                    </select>
                 </div>
 
             
@@ -38,11 +34,7 @@
                     <div class="form-group">
                         <label for="paymentMethod">Payment Method</label>
                         <select class="form-control" id="paymentMethod">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                            <option *ngFor="let paymentType of paymentTypeCollection">{{paymentType.name}}</option>
                         </select>
                     </div>                       
                 </div>                        

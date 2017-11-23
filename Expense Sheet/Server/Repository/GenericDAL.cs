@@ -1,0 +1,47 @@
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+
+namespace app.Server.Repository
+{
+    public class GenericDAL<TEntity> where TEntity : class
+    {
+         private readonly DbSet<TEntity> _dbSet;
+
+        public GenericDAL(AppDbContext dbContext)
+        {
+             _dbSet = dbContext.Set<TEntity>();             
+        }
+        public void Add(TEntity entity)
+        {
+            _dbSet.Add(entity);
+        }
+
+        public void Update(TEntity entity)
+        {
+            _dbSet.Update(entity);
+        }
+
+        public void Delete(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null)
+        {
+            if (filter == null)
+            {
+                return _dbSet;
+            }
+
+            return _dbSet.Where(filter);
+        }
+
+        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return _dbSet.SingleOrDefault(filter);
+        }
+
+    }
+}
