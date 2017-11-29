@@ -5,14 +5,16 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace app.Server.Repository.Migrations
+namespace app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171124083320_alter  transaction table")]
+    partial class altertransactiontable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +29,7 @@ namespace app.Server.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("app.Server.Models.PaymentMethod", b =>
@@ -39,7 +41,7 @@ namespace app.Server.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethod");
+                    b.ToTable("PaymentMethods");
                 });
 
             modelBuilder.Entity("app.Server.Models.Transaction", b =>
@@ -49,32 +51,36 @@ namespace app.Server.Repository.Migrations
 
                     b.Property<double>("Amount");
 
+                    b.Property<int>("CategoryId");
+
                     b.Property<string>("Comments");
+
+                    b.Property<DateTime>("Date");
 
                     b.Property<string>("PayedTo");
 
-                    b.Property<int?>("PaymentMethodId");
-
-                    b.Property<int?>("categoryId");
+                    b.Property<int>("PaymentMethodId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentMethodId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("categoryId");
+                    b.HasIndex("PaymentMethodId");
 
                     b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("app.Server.Models.Transaction", b =>
                 {
+                    b.HasOne("app.Server.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("app.Server.Models.PaymentMethod", "PaymentMethod")
                         .WithMany()
-                        .HasForeignKey("PaymentMethodId");
-
-                    b.HasOne("app.Server.Models.Category", "category")
-                        .WithMany()
-                        .HasForeignKey("categoryId");
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

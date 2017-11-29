@@ -10,6 +10,7 @@ using app.Server.Repository;
 using app.Server.Services;
 using Newtonsoft.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using app.Server.Models;
 
 namespace app
 {
@@ -19,6 +20,11 @@ namespace app
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=transactions.db"));
+           // services.AddDbContext<AppDbContext>();
+            services.AddScoped<AppDbContext>();
+            
+
             services.AddMvc();
             //  services.AddCors(options =>
             //                     options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
@@ -27,32 +33,53 @@ namespace app
             //                                                         .WithMethods("POST", "GET")));
                                                         
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=transactions.db"));
-            services.AddSingleton<UnitOfWork>();
-            services.AddTransient<TransactionService>();
-            
+          
+            services.AddScoped<UnitOfWork>();
+
+            services.AddScoped<TransactionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-           
-
+        {           
             app.UseMvc();
 
-            
             app.UseDefaultFiles(GetDefaultFileOptions());
             
             app.UseStaticFiles();
+
+            //SeedDatabase(app);
         }
 
-         private DefaultFilesOptions GetDefaultFileOptions()
+        private DefaultFilesOptions GetDefaultFileOptions()
         {
             DefaultFilesOptions options = new DefaultFilesOptions();
             options.DefaultFileNames.Clear();
             options.DefaultFileNames.Add("index.html");
             return options;
         }
+
+
+        public void SeedDatabase(IApplicationBuilder app)
+        {
+           var dbContext = new AppDbContext();
+
+            dbContext.PaymentMethods.Add(new PaymentMethod{Id = 1,Name = "Cash"});
+            dbContext.PaymentMethods.Add(new PaymentMethod{Id = 2,Name = "Credit Card"});
+            dbContext.PaymentMethods.Add(new PaymentMethod{Id = 3,Name = "Debit Card"});
+            dbContext.PaymentMethods.Add(new PaymentMethod{Id = 4,Name = "Pay Pal"});
+            dbContext.PaymentMethods.Add(new PaymentMethod{Id = 5,Name = "Online Transfer"});
+
+            dbContext.Categories.Add(new Category { Id = 1 , Name ="Groceries"});
+            dbContext.Categories.Add(new Category { Id = 2 , Name ="Gas"});
+            dbContext.Categories.Add(new Category { Id = 3 , Name ="Utilities"});
+            dbContext.Categories.Add(new Category { Id = 4 , Name ="Rent"});
+            dbContext.Categories.Add(new Category { Id = 5 , Name ="Others"});
+
+            dbContext.SaveChanges();
+        }
+
+        
 
        
     }

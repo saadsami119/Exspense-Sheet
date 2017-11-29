@@ -17,15 +17,26 @@ export default class HttpService {
         .catch(serverResponse => this.parseServerErrorResponse(serverResponse));
     }
 
+    sendPostRequest(url: string, data: any): Observable<any> {
+        let headers : Headers = new Headers();
+        headers.append("Content-Type", "application/json");
+
+        let options : RequestOptions = new RequestOptions({ headers: headers });
+
+        return this._http.post(url, data, options)
+            .map(serverResponse => this.parseServerResponse(serverResponse))
+            .catch(serverResponse => this.parseServerErrorResponse(serverResponse));
+    }
+
     private parseServerResponse(serverResponse : Response): any {
         let jsonResponse : any = serverResponse.json();
 
         if (jsonResponse.successful === false) {
             throw new Error(jsonResponse.error);
         }
+
         return jsonResponse.data;
     }
-
 
     private parseServerErrorResponse(exception: Response | any): any {
         let errorMessage: string;

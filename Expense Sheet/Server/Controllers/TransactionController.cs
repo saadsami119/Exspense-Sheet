@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using app.Server.Services;
 using app.Server.Models;
+using app.Server.ViewModels;
 using System;
 
 namespace app.Server.Controllers
@@ -15,6 +16,7 @@ namespace app.Server.Controllers
         {
             _transactionService = transactionService;
         }
+
 
         [HttpGet("paymentmethods")]
         public IActionResult GetAllPaymentMethods()
@@ -35,10 +37,10 @@ namespace app.Server.Controllers
         }   
 
         [HttpGet("categories")]
+
         public IActionResult GetAllCategories()
         {
-           
-            try
+           try
             {
                 return Json(new JsonResponse {
                     Successful = true, 
@@ -52,5 +54,33 @@ namespace app.Server.Controllers
             }        
         }   
 
+        [HttpPost("create")]
+        public IActionResult InsertNewTransaction([FromBody]TransactionViewModel viewModel)
+        {
+            try
+            {
+                var transaction = new Transaction 
+                {
+                    Amount = viewModel.Amount,
+                    PayedTo = viewModel.PayedTo,
+                    Date = viewModel.Date,
+                    CategoryId = viewModel.CategoryId,
+                    PaymentMethodId = viewModel.PaymentMethodId,
+                    Comments = viewModel.Comments
+                };
+
+                _transactionService.InsertNewTransaction(transaction);
+                return Json(new JsonResponse {Successful = true, Error = string.Empty, Data = null});
+            }
+            catch(Exception ex)
+            {
+                return Json(new JsonResponse {Successful = false, Error = ex.Message, Data = null});
+            }
+           
+
+            
+
+            return null;
+        }
     }
 }

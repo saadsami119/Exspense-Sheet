@@ -21,6 +21,10 @@ namespace app.Server.Repository
 
         public GenericDAL<Category> CategoryDAL => new GenericDAL<Category>(_appDbContext);
         
+        public void SaveChanges()
+        {
+            _appDbContext.SaveChanges();
+        }
     }
 
     

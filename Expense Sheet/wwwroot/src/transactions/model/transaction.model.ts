@@ -2,10 +2,11 @@ import PaymentMethod from "./transaction.paymentMethod.model";
 import Category from "./transaction.category.model";
 
 export default class Transaction {
-    dateTime : Date;
+    paymentMethodId : number;
+    categoryId : number;
+    date : Date;
     type : string;
     payedTo : string;
     amount : number;
-    paymentType : PaymentMethod;
-    category : Category;
+    comments : string;
 }

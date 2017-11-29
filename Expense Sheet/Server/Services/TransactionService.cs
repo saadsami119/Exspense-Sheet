@@ -10,12 +10,15 @@ namespace app.Server.Services
         private readonly GenericDAL<Transaction> _transactionDAL;
         private readonly GenericDAL<PaymentMethod> _paymentMethodDAL;
         private readonly GenericDAL<Category> _categoryDAL;
+        private readonly UnitOfWork _uow;
 
         public TransactionService(UnitOfWork uow)
         {            
             _transactionDAL = uow.TransactionDAL;
             _paymentMethodDAL = uow.PaymentMethodDAL;
             _categoryDAL = uow.CategoryDAL;
+
+            _uow = uow;
         }
         
         public IEnumerable<Transaction> FetchByDateRange( DateTime from , DateTime to )
@@ -31,6 +34,13 @@ namespace app.Server.Services
         public IEnumerable<Category> GetAllCategories()
         {
             return _categoryDAL.Get();
+        }
+
+        public void InsertNewTransaction( Transaction transaction)
+        {
+            _transactionDAL.Add(transaction);
+            _uow.SaveChanges();
+            
         }
     }
 }
