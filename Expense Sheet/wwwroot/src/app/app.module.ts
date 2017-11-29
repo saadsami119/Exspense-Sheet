@@ -5,6 +5,7 @@ import { HttpModule } from "@angular/http";
 import { RouterModule, Routes } from "@angular/router";
 import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import TransactionComponent from "../transactions/transaction.component";
+import NotificationComponent from "./notification/app.notification.component";
 import AppComponent from "./app.component";
 
 const appRoutes : Routes = [
@@ -14,7 +15,7 @@ const appRoutes : Routes = [
 
 @NgModule({
     imports:[BrowserModule,FormsModule,ReactiveFormsModule,HttpModule,CommonModule,RouterModule.forRoot(appRoutes)],
-    declarations:   [AppComponent,TransactionComponent],
+    declarations:   [AppComponent,NotificationComponent,TransactionComponent],
     bootstrap:      [AppComponent]
 })
 

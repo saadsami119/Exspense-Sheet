@@ -1,0 +1,7 @@
+<div *ngFor="let notification of notifications">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close" (click)="onClose(notification)">×</a>
+    <div class='alert {{notification.type}} alert-dismissable'>
+        <strong> {{notification.caption}} </strong> 
+        <p>{{notification.message}}</p>
+    </div>
+</div>
