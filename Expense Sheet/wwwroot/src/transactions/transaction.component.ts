@@ -6,6 +6,7 @@ import Transaction from "./model/transaction.model";
 import TransactionService from "./transaction.service";
 import PaymentMethod from "./model/transaction.paymentMethod.model";
 import Category from "./model/transaction.category.model";
+import TransactionType from "./model/app.transaction.transactionType.model";
 
 @Component({
     selector:"transaction",
@@ -17,6 +18,7 @@ export default class TransactionComponent implements OnInit {
     public transactionForm: FormGroup;
     public paymentMethodCollection : Array<PaymentMethod>;
     public categoryCollection : Array<Category>;
+    public transactionTypeCollection : Array<TransactionType>;
 
     constructor(
         private _fb: FormBuilder,
@@ -24,6 +26,7 @@ export default class TransactionComponent implements OnInit {
         private _transactionService : TransactionService) {
             this.paymentMethodCollection = new Array<PaymentMethod>();
             this.categoryCollection = new Array<Category>();
+            this.transactionTypeCollection = new Array<TransactionType>();
     }
 
     public ngOnInit(): void {
@@ -41,6 +44,13 @@ export default class TransactionComponent implements OnInit {
             },
                 error=> { alert("fetchAllCategories" + error); }
          );
+
+         this._transactionService.fetchAllTransactionType()
+         .subscribe(collection => {
+             this.transactionTypeCollection = collection;
+         },
+             error=> { alert("transactionTypeCollection" + error); }
+      );
     }
 
     public createNewTransaction(): void {
@@ -50,9 +60,10 @@ export default class TransactionComponent implements OnInit {
             transaction.date = new Date(dateString[2], dateString[1] - 1, dateString[0]);
             transaction.payedTo = this.transactionForm.get("payedTo").value;
             transaction.amount = this.transactionForm.get("amount").value;
-            transaction.comments = this.transactionForm.get("comments").value;
-            transaction.categoryId = this.transactionForm.get("selectedpaymentMethod").value;
-            transaction.paymentMethodId = this.transactionForm.get("selectedCategory").value;
+            transaction.notes = this.transactionForm.get("comments").value;
+            transaction.categoryId = this.transactionForm.get("selectedCategory").value;
+            transaction.paymentMethodId = this.transactionForm.get("selectedpaymentMethod").value;
+            transaction.transactionTypeId = this.transactionForm.get("selectedTransactionType").value;
 
          this._transactionService.insertNewTransaction(transaction)
             .subscribe(feedback => this.onTransactionCreated(),
@@ -67,6 +78,7 @@ export default class TransactionComponent implements OnInit {
             comments : new FormControl("",[Validators.required]),
             selectedpaymentMethod : new FormControl("",[Validators.required]),
             selectedCategory : new FormControl("",[Validators.required]),
+            selectedTransactionType : new FormControl("",[Validators.required])
         });
     }
 

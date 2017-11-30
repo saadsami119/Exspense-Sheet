@@ -11,8 +11,8 @@ using System;
 namespace app.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20171124083320_alter  transaction table")]
-    partial class altertransactiontable
+    [Migration("20171130080940_Initial Schema")]
+    partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,7 +29,7 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("app.Server.Models.PaymentMethod", b =>
@@ -41,7 +41,7 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("app.Server.Models.Transaction", b =>
@@ -53,13 +53,15 @@ namespace app.Migrations
 
                     b.Property<int>("CategoryId");
 
-                    b.Property<string>("Comments");
-
                     b.Property<DateTime>("Date");
+
+                    b.Property<string>("Notes");
 
                     b.Property<string>("PayedTo");
 
                     b.Property<int>("PaymentMethodId");
+
+                    b.Property<int>("TransactionTypeId");
 
                     b.HasKey("Id");
 
@@ -67,7 +69,21 @@ namespace app.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("Transactions");
+                    b.HasIndex("TransactionTypeId");
+
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("app.Server.Models.TransactionType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransactionType");
                 });
 
             modelBuilder.Entity("app.Server.Models.Transaction", b =>
@@ -80,6 +96,11 @@ namespace app.Migrations
                     b.HasOne("app.Server.Models.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("app.Server.Models.TransactionType", "TransactionType")
+                        .WithMany()
+                        .HasForeignKey("TransactionTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

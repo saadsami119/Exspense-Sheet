@@ -26,7 +26,7 @@ namespace app.Server.Controllers
                 return Json(new JsonResponse {
                     Successful = true, 
                     Error = string.Empty,
-                    Data = _transactionService.GetAllPaymentMethods()
+                    Data = _transactionService.FetchAllPaymentMethods()
                     });
             }
             catch(Exception ex)
@@ -45,7 +45,25 @@ namespace app.Server.Controllers
                 return Json(new JsonResponse {
                     Successful = true, 
                     Error = string.Empty,
-                    Data = _transactionService.GetAllCategories()
+                    Data = _transactionService.FetchAllCategories()
+                    });
+            }
+            catch(Exception ex)
+            {
+                return Json(new JsonResponse {Successful = false, Error = ex.Message, Data = null});
+            }        
+        }   
+
+        [HttpGet("types")]
+
+        public IActionResult GetAllTransactionTypes()
+        {
+           try
+            {
+                return Json(new JsonResponse {
+                    Successful = true, 
+                    Error = string.Empty,
+                    Data = _transactionService.FetchAllTransactionTypes()
                     });
             }
             catch(Exception ex)
@@ -66,7 +84,8 @@ namespace app.Server.Controllers
                     Date = viewModel.Date,
                     CategoryId = viewModel.CategoryId,
                     PaymentMethodId = viewModel.PaymentMethodId,
-                    Comments = viewModel.Comments
+                    TransactionTypeId = viewModel.TransactionTypeId,
+                    Notes = viewModel.Notes
                 };
 
                 _transactionService.InsertNewTransaction(transaction);
@@ -76,11 +95,6 @@ namespace app.Server.Controllers
             {
                 return Json(new JsonResponse {Successful = false, Error = ex.Message, Data = null});
             }
-           
-
-            
-
-            return null;
         }
     }
 }

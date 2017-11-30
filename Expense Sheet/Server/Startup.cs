@@ -76,6 +76,9 @@ namespace app
             dbContext.Categories.Add(new Category { Id = 4 , Name ="Rent"});
             dbContext.Categories.Add(new Category { Id = 5 , Name ="Others"});
 
+            dbContext.TransactionTypes.Add(new TransactionType{ Id = 1 , Name="Credit"});
+            dbContext.TransactionTypes.Add(new TransactionType{ Id = 2 , Name="Debit"});
+
             dbContext.SaveChanges();
         }
 

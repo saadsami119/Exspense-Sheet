@@ -4,6 +4,7 @@ import HttpService from "../app/app.httpService";
 import Transaction from "./model/transaction.model";
 import Category from "./model/transaction.category.model";
 import PaymentMethod from "./model/transaction.paymentMethod.model";
+import TransactionType from "./model/app.transaction.transactionType.model";
 
 
 @Injectable()
@@ -19,6 +20,11 @@ export default class TransactionService {
 
     public fetchAllCategories(): Observable<Category[]> {
         let url :string = "http://localhost:5000/api/transaction/categories";
+        return this._httpService.sendGetRequest(url);
+    }
+
+    public fetchAllTransactionType(): Observable<TransactionType[]> {
+        let url :string = "http://localhost:5000/api/transaction/types";
         return this._httpService.sendGetRequest(url);
     }
 

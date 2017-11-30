@@ -14,6 +14,8 @@ namespace app.Server.Repository
 
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
        
-       public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<TransactionType> TransactionTypes { get; set; }
     }
 }

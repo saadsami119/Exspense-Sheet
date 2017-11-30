@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace app.Server.Models
 {
-    [Table("PaymentMethod")]
-    public class PaymentMethod {
+    [Table("TransactionType")]
+    public class TransactionType {
         
         [Key]
         public int Id { get; set; }

@@ -20,6 +20,9 @@ namespace app.Server.Repository
         public GenericDAL<PaymentMethod> PaymentMethodDAL => new GenericDAL<PaymentMethod>(_appDbContext);
 
         public GenericDAL<Category> CategoryDAL => new GenericDAL<Category>(_appDbContext);
+
+        public GenericDAL<TransactionType> TransactionTypeDAL => new GenericDAL<TransactionType>(_appDbContext);
+        
         
         public void SaveChanges()
         {
