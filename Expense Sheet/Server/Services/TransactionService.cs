@@ -1,4 +1,6 @@
 using System;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Collections.Generic;
 using app.Server.Models;
 using app.Server.Repository;
@@ -25,6 +27,16 @@ namespace app.Server.Services
            
         }
         
+        public IEnumerable<Transaction> FetchLastTransaction(int count)
+        {
+            return _transactionDAL.Get()
+            .Include(x=>x.Category)
+            .Include(x=>x.PaymentMethod)
+            .Include(x=>x.TransactionType)
+            .OrderByDescending(x=>x.Date)
+            .Take(10);
+        }
+
         public IEnumerable<Transaction> FetchByDateRange( DateTime from , DateTime to )
         {
            return _transactionDAL.Get();

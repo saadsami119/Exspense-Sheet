@@ -6,7 +6,7 @@ import Transaction from "./model/transaction.model";
 import TransactionService from "./transaction.service";
 import PaymentMethod from "./model/transaction.paymentMethod.model";
 import Category from "./model/transaction.category.model";
-import TransactionType from "./model/app.transaction.transactionType.model";
+import TransactionType from "./model/transaction.transactionType.model";
 
 @Component({
     selector:"transaction",

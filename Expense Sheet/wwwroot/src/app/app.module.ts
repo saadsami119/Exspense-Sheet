@@ -6,16 +6,19 @@ import { RouterModule, Routes } from "@angular/router";
 import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import TransactionComponent from "../transactions/transaction.component";
 import NotificationComponent from "./notification/app.notification.component";
+import DashboardComponent from "../dashboard/dashboard.component";
+import PieChartComponent from "../chart/chart.piechart.component";
 import AppComponent from "./app.component";
 
 const appRoutes : Routes = [
         { path:"transaction",component: TransactionComponent },
-        { path: "", redirectTo: "transaction", pathMatch: "full" },
+        { path: "", redirectTo: "dashboard", pathMatch: "full" },
+        { path:"dashboard",component: DashboardComponent },
     ];
 
 @NgModule({
-    imports:[BrowserModule,FormsModule,ReactiveFormsModule,HttpModule,CommonModule,RouterModule.forRoot(appRoutes)],
-    declarations:   [AppComponent,NotificationComponent,TransactionComponent],
+    imports:[BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, CommonModule,RouterModule.forRoot(appRoutes)],
+    declarations:   [AppComponent, NotificationComponent, TransactionComponent, DashboardComponent, PieChartComponent],
     bootstrap:      [AppComponent]
 })
 

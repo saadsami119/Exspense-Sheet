@@ -4,7 +4,7 @@ import HttpService from "../app/app.httpService";
 import Transaction from "./model/transaction.model";
 import Category from "./model/transaction.category.model";
 import PaymentMethod from "./model/transaction.paymentMethod.model";
-import TransactionType from "./model/app.transaction.transactionType.model";
+import TransactionType from "./model/transaction.transactionType.model";
 
 
 @Injectable()

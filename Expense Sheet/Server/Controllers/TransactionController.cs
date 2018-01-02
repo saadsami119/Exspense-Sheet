@@ -72,8 +72,43 @@ namespace app.Server.Controllers
             }        
         }   
 
+        [HttpGet("last/{count}")]
+        public IActionResult GetLast(int count)
+        {
+            List<TransactionDetailViewModel> transactions = new List<TransactionDetailViewModel>();
+            try
+            {
+                foreach(var transaction in _transactionService.FetchLastTransaction(count))
+                {
+                    var viewModel = new TransactionDetailViewModel 
+                    {
+                        Id = transaction.Id,
+                        PaymentMethod = transaction.PaymentMethod.Name,
+                        Category= transaction.Category.Name,
+                        PayedTo = transaction.PayedTo,
+                        Date = transaction.Date,
+                        TransactionType = transaction.TransactionType.Name,
+                        Notes = transaction.Notes,
+                        Amount = transaction.Amount
+                    };
+
+                    transactions.Add(viewModel);
+                }
+            
+                return Json(new JsonResponse {
+                    Successful = true, 
+                    Error = string.Empty,
+                    Data = transactions
+                    });
+            }
+            catch(Exception ex)
+            {
+                return Json(new JsonResponse {Successful = false, Error = ex.Message, Data = null});
+            }        
+        }
+
         [HttpPost("create")]
-        public IActionResult InsertNewTransaction([FromBody]TransactionViewModel viewModel)
+        public IActionResult InsertNewTransaction([FromBody]InsertNewTransactionViewModel viewModel)
         {
             try
             {
