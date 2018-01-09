@@ -17,13 +17,10 @@ export default class DashboardComponent implements OnInit {
     public lastTenTransactions : Array<Transaction>;
     public transactionForCurrentMonth : Array<Transaction>;
     public pieChart : PieChart;
-    AmountSumGroupedByCategoryDataSet: any[];
 
     constructor(private _dashboardService : DashboardService) {
-        this.pieChart = new PieChart("Expenses by Category","myPieChart1");
         this.lastTenTransactions = new Array<Transaction>();
         this.transactionForCurrentMonth = new Array<Transaction>();
-        this.AmountSumGroupedByCategoryDataSet = [];
     }
 
     ngOnInit(): void {
@@ -37,15 +34,14 @@ export default class DashboardComponent implements OnInit {
 
         this._dashboardService.getTransactionForMonthYear(12,2017)
         .subscribe(collection => {
-            this.pieChart = new PieChart("Expenses by Category","myPieChart1");
             this.transactionForCurrentMonth = collection;
-            this.FillChartDataASetFromAmountSumGroupedByCategory();
+            this.DrawChartForExpensesGroupedByCategory();
         },
             error=> { alert("getLastTenTransaction" + error); }
         );
     }
 
-    private getAmountSumGroupedByCategory(property : string): Array<Group> {
+    private getExpensesGroupedByCategory(): Array<Group> {
         let groupedByCategory : Array<Group> = new Array<Group>();
         let distinctCategories : Array<string> = this.getDistinct(this.transactionForCurrentMonth,"category");
 
@@ -69,15 +65,17 @@ export default class DashboardComponent implements OnInit {
         },
             error=> { alert("getLastTenTransaction" + error); }
         );
-}
+    }
 
-    private FillChartDataASetFromAmountSumGroupedByCategory(): void {
-        let transactionByCategory : Array<Group> = this.getAmountSumGroupedByCategory("category");
-        this.AmountSumGroupedByCategoryDataSet.push(["Task", "Hours per Day"]);
+    private DrawChartForExpensesGroupedByCategory(): void {
+        let pieChartDataSet :any[] =[];
+        let transactionByCategory : Array<Group> = this.getExpensesGroupedByCategory();
+        pieChartDataSet.push(["Task", "Hours per Day"]);
 
         for(let transaction of transactionByCategory) {
-            this.AmountSumGroupedByCategoryDataSet.push([transaction.name,transaction.sum]);
+            pieChartDataSet.push([transaction.name,transaction.sum]);
         }
+        this.pieChart = new PieChart("Expenses by Category","myPieChart1",pieChartDataSet);
     }
 
     private getDistinct<T>(list : Array<T> , distinctBy : string ): Array<any> {

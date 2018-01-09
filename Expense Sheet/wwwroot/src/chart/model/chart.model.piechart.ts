@@ -1,26 +1,16 @@
-import PieChartConfiguration from "./chart.model.piechartConfiguration";
-
 export default class PieChart {
     title: string;
     pieHole: number;
-    configuration : PieChartConfiguration;
     elementId : string;
     dataSet : any;
+    pieSliceText: string;
 
-    constructor(title: string, elementId : string) {
+    constructor(title: string, elementId : string, dataSet : any[]) {
         this.title = title;
         this.elementId = elementId;
-        this.configuration = this.getConfiguration(title,elementId);
-    }
-
-    private getConfiguration(title : string, elementId : string): PieChartConfiguration {
-        let config : PieChartConfiguration = new PieChartConfiguration();
-        config.title = title;
-        config.elementId = elementId;
-        config.pieHole= 0.4;
-        config.pieSliceText="label";
-
-        return config;
+        this.pieHole= 0.4;
+        this.pieSliceText="label";
+        this.dataSet = dataSet;
     }
 }
 

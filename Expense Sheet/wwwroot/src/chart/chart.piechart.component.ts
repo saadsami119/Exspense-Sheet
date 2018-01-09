@@ -1,6 +1,7 @@
-import {Component,OnInit, Input } from "@angular/core";
+import {Component,OnInit, Input, OnChanges, SimpleChanges   } from "@angular/core";
 import PieChartConfiguration from "./model/chart.model.piechart";
 import ChartService from "./service/chart.service";
+import PieChart from "./model/chart.model.piechart";
 
 @Component({
     selector:"pie-chart",
@@ -8,14 +9,15 @@ import ChartService from "./service/chart.service";
     providers: [ChartService]
 })
 
-export default class PieChartComponent implements OnInit {
-    @Input() data: any[];
-    @Input() config: PieChartConfiguration;
-    @Input() elementId: string;
+export default class PieChartComponent implements OnChanges {
+    @Input() data : PieChart;
 
     constructor(private _chartService: ChartService) {}
 
-    ngOnInit(): void {
-        this._chartService.BuildPieChart(this.config,this.data);
-    }
+    ngOnChanges(changes : SimpleChanges): void {
+        if(changes.data.currentValue === undefined) {
+            return;
+        }
+        this._chartService.BuildPieChart(changes.data.currentValue);
+      }
 }
