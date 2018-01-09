@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import  PieChart from "./chart.model.piechart";
+import  PieChartConfiguration from "../model/chart.model.piechart";
 declare var google: any;
 
 @Injectable()
@@ -8,11 +8,13 @@ export default class ChartService {
         google.charts.load("current", {"packages":["corechart"]});
     }
 
-    public BuildPieChart(elementId: string, data: any[], config: PieChart): void {
-        var chartFunc : any = () => { return new google.visualization.PieChart(document.getElementById(elementId)); };
+    public BuildPieChart( pieChartConfiguration : PieChartConfiguration, data: any[]): void {
+        var chartFunc : any = () => {
+            return new google.visualization.PieChart(document.getElementById(pieChartConfiguration.elementId));
+         };
         var options : any = {
-                title: config.title,
-                pieHole: config.pieHole,
+                title: pieChartConfiguration.title,
+                pieHole: pieChartConfiguration.pieHole,
           };
           this.BuildChart(data, chartFunc, options);
     }

@@ -1,7 +1,17 @@
-<h1>Charsdsts</h1>
 
+
+
+<ul class="list-group"  *ngFor="let transaction of lastTenTransactions" >
+    <a class="list-group bmd-list-group-sm">
+      <div class="bmd-list-group-col">
+        <p class="list-group-item-heading">{{transaction.category}}</p>
+        <p class="list-group-item-text">{{transaction.amount}}</p>
+      </div>
+    </a>    
+  </ul>
+  
 
 <div class="divTableCell">
-    <pie-chart [data]="data1" [config]="config1" [elementId]="elementId1"></pie-chart>
+    <pie-chart [data]="AmountSumGroupedByCategoryDataSet" [config]="pieChart.configuration" [elementId]="pieChart.elementId"></pie-chart>
 </div>
 

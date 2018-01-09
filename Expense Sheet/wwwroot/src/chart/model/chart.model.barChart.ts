@@ -1,4 +1,4 @@
-export default class PieChart {
+export default class BarChart {
     title: string;
     pieHole: number;
 

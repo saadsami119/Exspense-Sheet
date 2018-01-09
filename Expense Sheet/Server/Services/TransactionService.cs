@@ -56,11 +56,31 @@ namespace app.Server.Services
         {
             return _transactionTypeDAL.Get();
         }
+
+        public IEnumerable<Transaction> FetchForMonth(int month, int year)
+        {
+            
+            return _transactionDAL.Get()
+            .Include(x=>x.Category)
+            .Include(x=>x.PaymentMethod)
+            .Include(x=>x.TransactionType)
+            .Where(x=>x.Date.Month == month && x.Date.Year == year);
+        }
+
+        public IDictionary<int,double> FetchSumPerMonthForYear(int month, int year)
+        {
+            
+            return  _transactionDAL.Get()
+            .Where(x=>x.Date.Year == year)
+            .GroupBy(x=>x.Date.Month)
+            .ToDictionary(k => k.Key , x=> x.Sum(v=>v.Amount));
+        }
         public void InsertNewTransaction( Transaction transaction)
         {
             _transactionDAL.Add(transaction);
             _uow.SaveChanges();
             
-        }
+        }       
+
     }
 }
