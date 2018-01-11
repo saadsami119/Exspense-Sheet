@@ -1,9 +1,16 @@
 export default class BarChart {
     title: string;
-    pieHole: number;
+    subTitle: string;
+    elementId : string;
+    dataSet : any;
+    orientation: string;
 
-    constructor(title: string, pieHole: number) {
+
+    constructor(title: string, subTitle : string, elementId : string , dataSet : any, orientation : string ) {
         this.title = title;
-        this.pieHole = pieHole;
+        this.subTitle = subTitle;
+        this.elementId = elementId;
+        this.orientation = orientation;
+        this.dataSet = dataSet;
     }
 }

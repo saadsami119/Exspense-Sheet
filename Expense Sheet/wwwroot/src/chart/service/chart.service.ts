@@ -1,22 +1,49 @@
 import { Injectable } from "@angular/core";
-import PieChart from "../model/chart.model.piechart";
+import Piechart from "../model/chart.model.piechart";
+import Barchart from "../model/chart.model.barChart";
+
 declare var google: any;
 
 @Injectable()
 export default class ChartService {
-    constructor() {
-        google.charts.load("current", {"packages":["corechart"]});
-    }
+    // constructor() {
+    // }
 
-    public BuildPieChart(piechart : PieChart): void {
+    public BuildPieChart(piechart : Piechart): void {
+        google.charts.load("current", {"packages":["corechart"]});
+
         var chartFunc : any = () => {
             return new google.visualization.PieChart(document.getElementById(piechart.elementId));
          };
         var options : any = {
                 title: piechart.title,
                 pieHole: piechart.pieHole,
+                chartArea:{
+                    width:300,
+                    height:300
+                }
           };
           this.BuildChart(piechart.dataSet, chartFunc, options);
+    }
+
+    public BuildBarChart(barChart : Barchart): void {
+        google.charts.load("current", {"packages":["bar"]});
+
+        var chartFunc : any = () => {
+            return new google.charts.Bar(document.getElementById(barChart.elementId));
+         };
+
+         var options : any = {
+            width: "100%",
+            height: "300",
+            chart : {
+                title: barChart.title,
+                subtitle : barChart.subTitle,
+            },
+            bars : barChart.orientation
+        };
+
+      this.BuildChart(barChart.dataSet, chartFunc, options);
     }
 
     private BuildChart(data: any[], chartFunc: any, options: any): void {
@@ -24,7 +51,7 @@ export default class ChartService {
         var datatable : any = google.visualization.arrayToDataTable(data);
             chartFunc().draw(datatable, options);
         };
-        var callback : any = () => func(chartFunc, options);
+        var callback : any = () => func(chartFunc,options);
         google.charts.setOnLoadCallback(callback);
     }
 }

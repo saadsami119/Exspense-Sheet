@@ -1,11 +1,10 @@
 import {Component,OnInit, Input, OnChanges, SimpleChanges   } from "@angular/core";
-import PieChartConfiguration from "./model/chart.model.piechart";
-import ChartService from "./service/chart.service";
-import PieChart from "./model/chart.model.piechart";
+import ChartService from "../service/chart.service";
+import PieChart from "../model/chart.model.piechart";
 
 @Component({
     selector:"pie-chart",
-    templateUrl: "src/chart/chart.piechart.view.html",
+    templateUrl: "src/chart/view/chart.piechart.view.html",
     providers: [ChartService]
 })
 

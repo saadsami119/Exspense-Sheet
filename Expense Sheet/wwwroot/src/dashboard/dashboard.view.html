@@ -1,18 +1,56 @@
-<div class="card" style="width: 20rem;">
-  <div class="card-body">
-    <h4 class="card-title">Card title</h4>    
-    <ul class="list-group"  *ngFor="let transaction of lastTenTransactions" >
-      <a class="list-group bmd-list-group-sm">
-        <div class="bmd-list-group-col">
-          <p class="list-group-item-heading">{{transaction.category}}</p>
-          <p class="list-group-item-text">{{transaction.amount}}</p>
+<div class="container-fluid">
+  <div class="row mt-2" >
+    <div class="col-2">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-primary">Card title</h4>    
+          <ul class="list-group bmd-list-group-sm"  *ngFor="let transaction of lastTenTransactions" >
+            <a class="list-group-item">
+              <div class="bmd-list-group-col">
+                <p class="list-group-item-heading">{{transaction.category}}</p>
+                <p class="list-group-item-text">{{transaction.amount}}</p>
+              </div>
+            </a>    
+          </ul>
+        </div>  
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-primary">Expenses By Category</h4>
+          <div class="form-row align-items-center mb-4">          
+              <div class="col-auto">
+                  <label class="mr-sm-2">Month</label>
+                      <select class="custom-select mb-sm-0" #selectedMonth>
+                          <option *ngFor="let month of months">{{month.value}}</option>
+                      </select>              
+              </div>
+              <div class="col-auto">
+                    <label class="mr-sm-2">Years</label>
+                        <select class="custom-select mb-sm-0" #selectedYear >
+                            <option *ngFor="let year of years">{{year}}</option>
+                        </select>              
+              </div>
+              <div class="col-auto">
+                  <button type="submit" class="btn btn-primary" (click)="UpdateTransactionCategoryPieChart(selectedMonth.value,selectedYear.value)">Submit</button>
+                </div>
+          </div>  
+          <pie-chart [data]="pieChart"></pie-chart>
         </div>
-      </a>    
-    </ul>
-  </div>  
+      </div>
+    </div>  
+
+
+    <div class="col-6">   
+        <bar-chart [data]="barchart"></bar-chart> 
+    </div>
+
+  </div>
 </div>
 
-<div class="divTableCell">
-    <pie-chart [data]="pieChart"></pie-chart>
-</div>
+
+
+
 

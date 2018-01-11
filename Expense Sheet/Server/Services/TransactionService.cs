@@ -67,14 +67,16 @@ namespace app.Server.Services
             .Where(x=>x.Date.Month == month && x.Date.Year == year);
         }
 
-        public IDictionary<int,double> FetchSumPerMonthForYear(int month, int year)
+        public IEnumerable<Transaction> FetchForYearRange(int from, int to)
         {
             
-            return  _transactionDAL.Get()
-            .Where(x=>x.Date.Year == year)
-            .GroupBy(x=>x.Date.Month)
-            .ToDictionary(k => k.Key , x=> x.Sum(v=>v.Amount));
+            return _transactionDAL.Get()
+            .Include(x=>x.Category)
+            .Include(x=>x.PaymentMethod)
+            .Include(x=>x.TransactionType)
+            .Where(x=>x.Date.Year >= from && x.Date.Year <= to);
         }
+
         public void InsertNewTransaction( Transaction transaction)
         {
             _transactionDAL.Add(transaction);

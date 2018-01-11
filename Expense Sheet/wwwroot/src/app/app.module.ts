@@ -7,7 +7,9 @@ import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import TransactionComponent from "../transactions/transaction.component";
 import NotificationComponent from "./notification/app.notification.component";
 import DashboardComponent from "../dashboard/dashboard.component";
-import PieChartComponent from "../chart/chart.piechart.component";
+import PieChartComponent from "../chart/component/chart.piechart.component";
+import BarchartComponent from "../chart/component/chart.barchart.component";
+
 import AppComponent from "./app.component";
 
 const appRoutes : Routes = [
@@ -18,7 +20,7 @@ const appRoutes : Routes = [
 
 @NgModule({
     imports:[BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, CommonModule,RouterModule.forRoot(appRoutes)],
-    declarations:   [AppComponent, NotificationComponent, TransactionComponent, DashboardComponent, PieChartComponent],
+    declarations:   [AppComponent, NotificationComponent, TransactionComponent, DashboardComponent, PieChartComponent,BarchartComponent],
     bootstrap:      [AppComponent]
 })
 
