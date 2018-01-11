@@ -34,7 +34,7 @@
                         </select>              
               </div>
               <div class="col-auto">
-                  <button type="submit" class="btn btn-primary" (click)="UpdateTransactionCategoryPieChart(selectedMonth.value,selectedYear.value)">Submit</button>
+                  <button type="submit" class="btn btn-primary" (click)="UpdatePieChartForExpenses(selectedMonth.value,selectedYear.value)">Submit</button>
                 </div>
           </div>  
           <pie-chart [data]="pieChart"></pie-chart>

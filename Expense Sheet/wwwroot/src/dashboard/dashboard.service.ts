@@ -15,9 +15,9 @@ export default class DashboardService {
         return this._httpService.sendGetRequest(url);
     }
 
-    public getTransactionForMonthYear(month : number, year : number ): Observable<Transaction[]> {
+    public async getTransactionForMonthYear(month : number, year : number ): Promise<Transaction[]> {
         let url :string = "http://localhost:5000/api/transaction/month/"+month+"/year/"+year;
-        return this._httpService.sendGetRequest(url);
+        return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public getExpensesPerMonthForYear(month : number, year : number): Observable<Transaction[]> {
