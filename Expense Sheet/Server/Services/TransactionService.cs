@@ -27,14 +27,14 @@ namespace app.Server.Services
            
         }
         
-        public IEnumerable<Transaction> FetchLastTransaction(int count)
+        public IEnumerable<Transaction> FetchTransactionForDateRange(DateTime from , DateTime to)
         {
             return _transactionDAL.Get()
+            .Where(x=>x.Date >= from && x.Date <= to)
             .Include(x=>x.Category)
             .Include(x=>x.PaymentMethod)
             .Include(x=>x.TransactionType)
-            .OrderByDescending(x=>x.Date)
-            .Take(10);
+            .OrderByDescending(x=>x.Date);          
         }
 
         public IEnumerable<Transaction> FetchByDateRange( DateTime from , DateTime to )

@@ -17,11 +17,7 @@ export default class ChartService {
          };
         var options : any = {
                 title: piechart.title,
-                pieHole: piechart.pieHole,
-                chartArea:{
-                    width:300,
-                    height:300
-                }
+                pieHole: piechart.pieHole
           };
           this.BuildChart(piechart.dataSet, chartFunc, options);
     }
@@ -34,8 +30,6 @@ export default class ChartService {
          };
 
          var options : any = {
-            width: "100%",
-            height: "300",
             chart : {
                 title: barChart.title,
                 subtitle : barChart.subTitle,

@@ -82,6 +82,8 @@ export default class TransactionComponent implements OnInit {
         });
     }
 
+    // tODO: MUST BE IN COMMON
+
     private dateValidator(regexPattern: RegExp): any {
         return (control: AbstractControl): {[key: string]: any} => {
           let isValid : boolean = regexPattern.test(control.value);

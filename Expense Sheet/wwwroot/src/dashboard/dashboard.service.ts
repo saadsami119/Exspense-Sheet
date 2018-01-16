@@ -10,9 +10,9 @@ export default class DashboardService {
     constructor(private _httpService: HttpService) {
     }
 
-    public getLastTenTransaction():Observable<Transaction[]> {
-        let url :string = "http://localhost:5000/api/transaction/last/10";
-        return this._httpService.sendGetRequest(url);
+    public async getTransactionForDateRange(from :Date, to : Date):Promise<Transaction[]> {
+        let url :string = "http://localhost:5000/api/transaction/date/from/" +from.toISOString() + "/to/" +to.toISOString();
+        return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public async getTransactionForMonthYear(month : number, year : number ): Promise<Transaction[]> {

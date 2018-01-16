@@ -73,13 +73,13 @@ namespace app.Server.Controllers
             }        
         }   
 
-        [HttpGet("last/{count}")]
-        public IActionResult GetLast(int count)
+        [HttpGet("date/from/{from}/to/{to}")]
+        public IActionResult GetRange(DateTime from , DateTime to)
         {
             List<TransactionDetailViewModel> transactions = new List<TransactionDetailViewModel>();
             try
             {
-                foreach(var transaction in _transactionService.FetchLastTransaction(count))
+                foreach(var transaction in _transactionService.FetchTransactionForDateRange(from,to))
                 {
                     var viewModel = new TransactionDetailViewModel 
                     {

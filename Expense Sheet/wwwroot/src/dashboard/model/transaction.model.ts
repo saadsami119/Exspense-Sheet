@@ -1,7 +1,7 @@
 export default class Transaction {
     paymentMethod : string;
     category : string;
-    date : Date;
+    date : string;
     type : string;
     payedTo : string;
     amount : number;

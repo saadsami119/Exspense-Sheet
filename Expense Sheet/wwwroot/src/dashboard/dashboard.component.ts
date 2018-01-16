@@ -1,13 +1,14 @@
 import {Component , OnInit} from "@angular/core";
+import {FormGroup, FormControl, FormBuilder,Validators,AbstractControl} from "@angular/forms";
 import Transaction from "./model/transaction.model";
 import DashboardService from "./dashboard.service";
 import PieChart from "../chart/model/chart.model.piechart";
 import Tuple from "./model/transaction.model.tuple";
 import BarChart from "../chart/model/chart.model.barChart";
 import TransactionService from "../transactions/transaction.service";
-import "rxjs/add/operator/toPromise";
 import Category from "../transactions/model/transaction.category.model";
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/operator/toPromise";
 declare var google:any;
 
 @Component({
@@ -22,8 +23,11 @@ export default class DashboardComponent implements OnInit {
     public barchart : BarChart;
     public months : Array<Tuple<number,string>>;
     public years : Array<number>;
+    public dashboardForm: FormGroup;
 
-    constructor(private _dashboardService : DashboardService , private _transactionService : TransactionService) {
+    constructor(private _fb: FormBuilder,
+                private _dashboardService : DashboardService,
+                private _transactionService : TransactionService) {
         this.lastTenTransactions = new Array<Transaction>();
         this.months = new Array<Tuple<number,string>>();
         this.years = new Array<number>();
@@ -34,14 +38,28 @@ export default class DashboardComponent implements OnInit {
         this.months = this._dashboardService.getAllMonthsName();
         this.years = this._dashboardService.getNextFiveYears();
 
-        this._dashboardService.getLastTenTransaction()
-        .subscribe(collection => {
-            this.lastTenTransactions = collection;
-        },
-            error=> { alert("getLastTenTransaction" + error); }
-        );
+        this.dashboardForm = this._fb.group({
+            dateFrom: new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
+            dateTo : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) )
+        });
+
+        this.FetchTransactionForRange();
+        this.UpdatePieChartForExpenses("December",2017);
 
         this.UpdateBarChartForExpenses("1","1");
+    }
+
+    public async FetchTransactionForRange(): Promise<void> {
+       let fromDateString : any = this.dashboardForm.get("dateFrom").value.split(".");
+        let  fromDate : Date = new Date(fromDateString[2], fromDateString[1] - 1, fromDateString[0]);
+        let toDateString :  any = this.dashboardForm.get("dateTo").value.split(".");
+        let  ToDate : Date = new Date(toDateString[2], toDateString[1] - 1, toDateString[0]);
+
+        fromDate = new Date("11/11/2017");
+        ToDate = new Date("01/02/2018");
+        this.lastTenTransactions = await this._dashboardService.getTransactionForDateRange(fromDate,ToDate);
+        this.lastTenTransactions.map(x=> x.date = new Date(x.date).toDateString());
+
     }
 
     public async UpdatePieChartForExpenses(monthName : string, year : number): Promise<void> {
@@ -69,7 +87,7 @@ export default class DashboardComponent implements OnInit {
 
         for(let year: number = 2017; year <= 2018; year++) {
             let dataRow : Array<any> = [year.toString()];
-            var transactionsPerYear : Transaction[] = transactions.filter(t => new Date(t.date.toString()).getFullYear() === year);
+            var transactionsPerYear : Transaction[] = transactions.filter(t => new Date(t.date).getFullYear() === year);
             var transactionsPerYearSumByProperty : Array<Tuple<string,number>> = this.SumByProperty(transactionsPerYear,"category");
 
             for(let category of categories) {
@@ -78,7 +96,7 @@ export default class DashboardComponent implements OnInit {
             }
             dataSet.push(dataRow);
         }
-        this.barchart = new BarChart("Company Performance","Sales, Expenses, and Profit: 2014-2017","barchart1",dataSet,"vertical");
+        this.barchart = new BarChart("Expenses","","barchart1",dataSet,"vertical");
     }
 
     private SumByProperty(transactions : Array<Transaction> , propertyName : string): Array<Tuple<string,number>> {
@@ -112,6 +130,14 @@ export default class DashboardComponent implements OnInit {
             }
 
         return distinctCategories;
+    }
+
+     // tODO: MUST BE IN COMMON
+     private dateValidator(regexPattern: RegExp): any {
+        return (control: AbstractControl): {[key: string]: any} => {
+          let isValid : boolean = regexPattern.test(control.value);
+          return !isValid ? {"invalidDate": {value: control.value}} : null;
+        };
     }
 
     private async getAllCategories(): Promise<Category[]> {
