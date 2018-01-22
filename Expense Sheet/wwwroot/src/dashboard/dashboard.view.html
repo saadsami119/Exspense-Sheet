@@ -1,94 +1,84 @@
-<div class="container-fluid">
-    <div class="row h-75 mt-2 mb-2">
+<div class="container-fluid h-100">
+    
+    <div class="row h-50 mt-1">    
         
-        <div class="col-sm-5 h-100">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title text-primary">Transactions By Date</h4>
-
-                    <div class="row align-items-center mt-1 mb-1" [formGroup]="dashboardForm">
-                        <div class="form-group form-group-sm col-sm-3">  
-                                <label for="from" class="bmd-label-static">From </label>
-                                <input type="text" class="form-control form-control-sm" id="from" formControlName="dateFrom" placeholder="dd.mm.yyyy">
-                                <span *ngIf="dashboardForm.get('dateFrom').dirty && dashboardForm.get('dateFrom').errors?.invalidDate">
-                                    <p class="text-danger">Invalid Date</p>
-                                </span>
-                        </div>
-                        <div class="form-group form-group-sm col-sm-3">  
-                                <label for="from" class="bmd-label-static">To </label>
-                                <input type="text" class="form-control form-control-sm" id="from" formControlName="dateTo" placeholder="dd.mm.yyyy">
-                                <span *ngIf="dashboardForm.get('dateTo').dirty && dashboardForm.get('dateTo').errors?.invalidDate">
-                                    <p class="text-danger">Invalid Date</p>
-                                </span>
-                        </div>
-                            <div class="col-sm-1">
-                                <button type="submit" class="btn btn-outline-primary btn-sm"(click)="FetchTransactionForRange()">Show</button>
-                        </div>      
-                    </div>
-                    
-                    <div class="h-75 mt-1 mb-1" style="overflow-y:auto">
-                        <ul class="list-group list-group-sm"  *ngFor="let transaction of lastTenTransactions">
-                            <span class="border border-light">
-                                <div class="list-group-item list-group-item-action flex-column align-items-start">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{transaction.category}}</h6>
-                                        <small>{{transaction.date}}</small>
-                                    </div>
-                                    <div>
-                                        <div class="list-inline">
-                                            <p class="list-inline-item font-weight-bold m-1">Amount:</p>
-                                            <p class="list-inline-item m-1">${{transaction.amount}}</p>
-                                        </div>
-                                        <div class="list-inline">
-                                            <p class="list-inline-item font-weight-bold m-1">Payed To:</p>
-                                            <p class="list-inline-item m-1">{{transaction.payedTo}}</p>
-                                        </div>
-                                        <div class="list-inline">
-                                            <p class="list-inline-item font-weight-bold m-1">Transaction Method:</p>
-                                            <p class="list-inline-item m-1">{{transaction.transactionType}}</p>
-                                        </div>
-                                    </div>
-                                   
+        <!-- Section 1.1 -->
+        <div class="col-12 col-xl-5 h-100 mb-1">
+            <div class="card h-100">
+                <div class="card-body h-100" style="overflow:auto">                    
+                        <h6 class="card-title text-primary">Transactions By Date</h6>
+                        <div class="row align-items-center" [formGroup]="dashboardForm">
+                                <div class="form-group col-12 col-sm-2 ">  
+                                    <label for="from" class="bmd-label-static">From </label>
+                                    <input type="text" class="form-control form-control-sm" id="from" formControlName="dateFrom" placeholder="dd.mm.yyyy">
+                                    <span *ngIf="dashboardForm.get('dateFrom').dirty && dashboardForm.get('dateFrom').errors?.invalidDate">
+                                        <p class="text-danger">Invalid Date</p>
+                                    </span>
                                 </div>
-                            </span>  
-                        </ul>
-                    </div>
+                                <div class="form-group col-12 col-sm-2">  
+                                    <label for="from" class="bmd-label-static">To </label>
+                                    <input type="text" class="form-control form-control-sm" id="from" formControlName="dateTo" placeholder="dd.mm.yyyy">
+                                    <span *ngIf="dashboardForm.get('dateTo').dirty && dashboardForm.get('dateTo').errors?.invalidDate">
+                                        <p class="text-danger">Invalid Date</p>
+                                    </span>
+                                </div>
+                                    <div class="col-6 col-sm-1">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm"(click)="FetchTransactionForRange()">Show</button>
+                                    </div>      
+                            </div>
                     
-                </div>  
+                    <table class="table table-sm table-responsive table-striped table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Payed</th>
+                                <th>Method</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let transaction of lastTenTransactions">
+                            <tr>
+                                <td>{{transaction.date}}</td>
+                                <td>{{transaction.category}}</td>
+                                <td>{{transaction.amount}}</td>
+                                <td>{{transaction.payedTo}}</td>
+                                <td>{{transaction.transactionType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-
-        <div class="col-sm-7 h-100">
-            <div class="col-sm-12">
-                    <div class="row align-items-end">
-                        <div class="col-sm-5">
-                            <label class="form-label bmd-label-static">Month</label>
-                            <select class="form-control form-control-xs" #selectedMonth>
-                                <option *ngFor="let month of months">{{month.value}}</option>
-                            </select>              
+        </div>                
+        
+        <!-- Section 1.2 -->
+        <div class="col-12 col-xl-5 h-100 mb-1">
+                <div class="card h-100">
+                    <div class="card-body h-100" style="overflow:auto">
+                        <h6 class="card-title text-primary">Pie Chart Representation</h6>
+                        <div class="row align-items-center">
+                            <div class="col-12 col-sm-2">
+                                    <label class="form-label bmd-label-static">Month</label>
+                                    <select class="form-control form-control-xs" #selectedMonth>
+                                        <option *ngFor="let month of months">{{month.value}}</option>
+                                    </select>              
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <label class="form-label bmd-label-static">Years</label>
+                                    <select class="form-control form-control-xs" #selectedYear >
+                                        <option *ngFor="let year of years">{{year}}</option>
+                                    </select>              
+                                </div>
+                                <div class="col-12 col-sm-1">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" (click)="UpdatePieChartForExpenses(selectedMonth.value,selectedYear.value)">Submit</button>
+                                </div> 
                         </div>
-                        <div class="col-sm-5">
-                            <label class="form-label bmd-label-static">Years</label>
-                            <select class="form-control form-control-xs" #selectedYear >
-                                <option *ngFor="let year of years">{{year}}</option>
-                            </select>              
-                        </div>
-                        <div class="col-sm-1">
-                            <button type="submit" class="btn btn-primary fixed-bottom" (click)="UpdatePieChartForExpenses(selectedMonth.value,selectedYear.value)">Submit</button>
+                        <div class="col-12">
+                            <pie-chart [data]="pieChart"></pie-chart>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                    <pie-chart [data]="pieChart"></pie-chart>
-                </div>
+                </div>        
         </div>
 
-    </div>
-    
-    <div class="row h-25 mt-2 mb-2">
-        <div class="col-sm-7 h-100">
-                <bar-chart [data]="barchart"></bar-chart>
-        </div>
-    </div>
-    
+    </div>    
 </div>
