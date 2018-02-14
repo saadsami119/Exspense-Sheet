@@ -60,11 +60,11 @@ export default class DashboardComponent implements OnInit {
         this._transactionType = await this._dashboardService.getAllTransactionType();
         this._paymentMethod = await this._dashboardService.getAllPaymentMethod();
 
-        this.fetchTransactionForDateRange(new Date("11/11/2017"),new Date("01/02/2018"));
+        this.fetchTransactionForDateRange(new Date("10/10/2017"),new Date("10/10/2018"));
 
         this.updatePieChartForExpenses("December",2017, "Category");
 
-        this.updateBarChart("2017","2019","payment method");
+        this.updateBarChart("2017","2017","Category");
     }
 
     public async displayTransactionsByDateRange(): Promise<void> {

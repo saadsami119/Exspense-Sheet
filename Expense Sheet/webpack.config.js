@@ -37,9 +37,9 @@ module.exports = {
         ]
       },
       plugins: [
-        //new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./dist/vendor.bundle.js")
-        //new webpack.optimize.CommonsChunkPlugin(ccpOptions),
-        //new webpack.LoaderOptionsPlugin({minimize: true,debug: false}),
-        //new webpack.optimize.UglifyJsPlugin({minimize: true,sourceMap: true})
+      // new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./dist/vendor.bundle.js"),
+      // new webpack.optimize.CommonsChunkPlugin(ccpOptions),
+      // new webpack.LoaderOptionsPlugin({minimize: true,debug: false}),
+      // new webpack.optimize.UglifyJsPlugin({minimize: true,sourceMap: true})
       ]
 }

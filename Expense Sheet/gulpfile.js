@@ -13,7 +13,7 @@ gulp.task('copy-dependencies', [
 
 gulp.task("clean",function(){
     //return del('./wwwroot/ts/**/*.js.map');
-    //return del('./wwwroot/ts/**/*.js');
+    del('./wwwroot/build/*.*');
     return del('./wwwroot/vendor/**/*.*');
 })
 

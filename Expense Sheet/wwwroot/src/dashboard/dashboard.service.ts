@@ -13,37 +13,37 @@ export default class DashboardService {
     }
 
     public async getTransactionForDateRange(from :Date, to : Date):Promise<Transaction[]> {
-        let url :string = "http://localhost:5000/api/transaction/date/from/" +from.toISOString() + "/to/" +to.toISOString();
+        let url :string = "/api/transaction/date/from/" +from.toISOString() + "/to/" +to.toISOString();
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public async getTransactionForMonthYear(month : number, year : number ): Promise<Transaction[]> {
-        let url :string = "http://localhost:5000/api/transaction/month/"+month+"/year/"+year;
+        let url :string = "/api/transaction/month/"+month+"/year/"+year;
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public getExpensesPerMonthForYear(month : number, year : number): Observable<Transaction[]> {
-        let url :string = "http://localhost:5000/api/transaction/month/"+month+"/year/"+year;
+        let url :string = "/api/transaction/month/"+month+"/year/"+year;
         return this._httpService.sendGetRequest(url);
     }
 
     public async getExpensesForYearRange(from : number, to : number): Promise<Transaction[]> {
-        let url :string = "http://localhost:5000/api/transaction/year/from/"+from+"/to/"+to;
+        let url :string = "/api/transaction/year/from/"+from+"/to/"+to;
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public async getAllTransactionCategories(): Promise<Category[]> {
-        let url :string = "http://localhost:5000/api/transaction/categories";
+        let url :string = "/api/transaction/categories";
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public async getAllPaymentMethod(): Promise<Category[]> {
-        let url :string = "http://localhost:5000/api/transaction/paymentmethods";
+        let url :string = "/api/transaction/paymentmethods";
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
     public async getAllTransactionType(): Promise<Category[]> {
-        let url :string = "http://localhost:5000/api/transaction/types";
+        let url :string = "/api/transaction/types";
         return this._httpService.sendGetRequest(url).toPromise();
     }
 

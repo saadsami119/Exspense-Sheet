@@ -28,10 +28,4 @@ export default class AppComponent implements OnInit {
         });
     }
 
-    // private removeAllPreviousNotifications(): void {
-    //     while(this.alerts.length > 0) {
-    //         this.alerts.pop();
-    //     }
-    // }
-
 }

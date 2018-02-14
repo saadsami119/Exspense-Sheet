@@ -1,4 +1,4 @@
-<div class="container-fluid p-1" style="height:98%;width:98%">
+<div class="container-fluid p-1" style="height:90%;width:98%">
     
     <div class="row h-100">
          <div class="col-12 col-lg-5 h-100 mb-sm-2 mt-1">
@@ -25,7 +25,7 @@
                                 </div>      
                         </div>
                     
-                    <table class="table table-sm table-responsive table-striped table-bordered">
+                    <table class="table  table-bordered">
                         <thead class="thead-inverse">
                             <tr>
                                 <th>Date</th>
@@ -62,15 +62,21 @@
                                             </select>              
                                         </div>
                                         <div class="form-group col-12 col-sm-2">
-                                            <label class="form-label bmd-label-static">To</label>
+                                            <label class="form-label bmd-label-static">To Year</label>
                                             <select class="form-control form-control-xs" #selectedToYear >
                                                 <option *ngFor="let year of years">{{year}}</option>
                                             </select>              
                                         </div> 
-                                        <div class="form-group col-12 col-sm-1">
-                                            <button type="submit" class="btn btn-outline-primary btn-sm" (click)="updateBarChart(selectedFromYear.value,selectedToYear.value,selectedFilter.value)">Show</button>
-                                        </div> 
+                                        <div class="form-group col-12 col-sm-3">
+                                            <label class="form-label bmd-label-static">Filter</label>
+                                            <select class="form-control form-control-xs" #selectedFilterType >
+                                                <option *ngFor="let filter of filters">{{filter}}</option>
+                                            </select>              
                                         </div>
+                                        <div class="form-group col-12 col-sm-1">
+                                            <button type="submit" class="btn btn-outline-primary btn-sm" (click)="updateBarChart(selectedFromYear.value,selectedToYear.value,selectedFilterType.value)">Show</button>
+                                        </div> 
+                                    </div>
                                     <bar-chart [data]="barchart"></bar-chart>
                                 </div>
                             </div>
@@ -97,7 +103,7 @@
                                                 <select class="form-control form-control-xs" #selectedFilter >
                                                     <option *ngFor="let filter of filters">{{filter}}</option>
                                                 </select>              
-                                            </div>
+                                        </div>
         
                                         <div class="form-group col-12 col-sm-1">
                                             <button type="submit" class="btn btn-outline-primary btn-sm" (click)="updatePieChartForExpenses(selectedMonth.value,selectedYear.value,selectedFilter.value)">Show</button>

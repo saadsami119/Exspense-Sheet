@@ -14,7 +14,7 @@ export default class TransactionService {
     }
 
     public fetchAllPaymentMethods(): Observable<PaymentMethod[]> {
-        let url :string = "http://localhost:5000/api/transaction/paymentmethods";
+        let url :string = "/api/transaction/paymentmethods";
         return this._httpService.sendGetRequest(url);
     }
 
@@ -24,12 +24,12 @@ export default class TransactionService {
     }
 
     public fetchAllTransactionType(): Observable<TransactionType[]> {
-        let url :string = "http://localhost:5000/api/transaction/types";
+        let url :string = "/api/transaction/types";
         return this._httpService.sendGetRequest(url);
     }
 
     public insertNewTransaction(transaction : Transaction): Observable<any> {
-        let url :string = "http://localhost:5000/api/transaction/create";
+        let url :string = "/api/transaction/create";
         return this._httpService.sendPostRequest(url,transaction);
     }
 }
