@@ -8,24 +8,24 @@
                 <div class="card-body h-100" style="overflow:auto">                    
                         <h6 class="card-title text-primary">Transactions By Date</h6>
                         <div class="row align-items-center" [formGroup]="dashboardForm">
-                                <div class="form-group col-12 col-sm-2 ">  
+                                <div class="form-group col-12 col-sm-3">  
                                     <label for="from" class="bmd-label-static">From </label>
                                     <input type="text" class="form-control form-control-sm" id="from" formControlName="dateFrom" placeholder="dd.mm.yyyy">
                                     <span *ngIf="dashboardForm.get('dateFrom').dirty && dashboardForm.get('dateFrom').errors?.invalidDate">
                                         <p class="text-danger">Invalid Date</p>
                                     </span>
                                 </div>
-                                <div class="form-group col-12 col-sm-2">  
+                                <div class="form-group col-12 col-sm-3">  
                                     <label for="from" class="bmd-label-static">To </label>
                                     <input type="text" class="form-control form-control-sm" id="from" formControlName="dateTo" placeholder="dd.mm.yyyy">
                                     <span *ngIf="dashboardForm.get('dateTo').dirty && dashboardForm.get('dateTo').errors?.invalidDate">
                                         <p class="text-danger">Invalid Date</p>
                                     </span>
                                 </div>
-                                    <div class="col-6 col-sm-1">
-                                        <button type="submit" class="btn btn-outline-primary btn-sm"(click)="FetchTransactionForRange()">Show</button>
-                                    </div>      
-                            </div>
+                                <div class="col-6 col-sm-1">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm"(click)="displayTransactionsByDateRange()">Show</button>
+                                </div>      
+                        </div>
                     
                     <table class="table table-sm table-responsive table-striped table-bordered">
                         <thead class="thead-inverse">
@@ -37,7 +37,7 @@
                                 <th>Method</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let transaction of lastTenTransactions">
+                        <tbody *ngFor="let transaction of transactionsByDateRange">
                             <tr>
                                 <td>{{transaction.date}}</td>
                                 <td>{{transaction.category}}</td>
@@ -55,30 +55,65 @@
         <div class="col-12 col-xl-5 h-100 mb-1">
                 <div class="card h-100">
                     <div class="card-body h-100" style="overflow:auto">
-                        <h6 class="card-title text-primary">Pie Chart Representation</h6>
+                        <h6 class="card-title text-primary">Pie Chart</h6>
                         <div class="row align-items-center">
-                            <div class="col-12 col-sm-2">
+                            <div class="form-group col-12 col-sm-3">
                                     <label class="form-label bmd-label-static">Month</label>
                                     <select class="form-control form-control-xs" #selectedMonth>
                                         <option *ngFor="let month of months">{{month.value}}</option>
                                     </select>              
                                 </div>
-                                <div class="col-12 col-sm-2">
+                                <div class="form-group col-12 col-sm-2">
                                     <label class="form-label bmd-label-static">Years</label>
                                     <select class="form-control form-control-xs" #selectedYear >
                                         <option *ngFor="let year of years">{{year}}</option>
                                     </select>              
                                 </div>
-                                <div class="col-12 col-sm-1">
-                                    <button type="submit" class="btn btn-outline-primary btn-sm" (click)="UpdatePieChartForExpenses(selectedMonth.value,selectedYear.value)">Submit</button>
+                                <div class="form-group col-12 col-sm-3">
+                                        <label class="form-label bmd-label-static">Filter</label>
+                                        <select class="form-control form-control-xs" #selectedFilter >
+                                            <option *ngFor="let filter of filters">{{filter}}</option>
+                                        </select>              
+                                    </div>
+
+                                <div class="form-group col-12 col-sm-1">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" (click)="updatePieChartForExpenses(selectedMonth.value,selectedYear.value,selectedFilter.value)">Show</button>
                                 </div> 
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mt-3">
                             <pie-chart [data]="pieChart"></pie-chart>
                         </div>
                     </div>
                 </div>        
         </div>
-
     </div>    
+
+    <div class="row h-50 mt-1">
+        <div class="col-12 col-xl-5 h-100 mb-1">
+            <div class="card h-100">
+                <div class="card-body h-100" style="overflow:auto">
+                    <h6 class="card-title text-primary">Bar Chart </h6>
+                    <div class="row align-items-center">
+                        <div class="form-group col-12 col-sm-3">
+                            <label class="form-label bmd-label-static">From Year </label>
+                            <select class="form-control form-control-xs" #selectedFromYear>
+                                    <option *ngFor="let year of years">{{year}}</option>
+                            </select>              
+                        </div>
+                        <div class="form-group col-12 col-sm-2">
+                            <label class="form-label bmd-label-static">To</label>
+                            <select class="form-control form-control-xs" #selectedToYear >
+                                <option *ngFor="let year of years">{{year}}</option>
+                            </select>              
+                        </div> 
+                        <div class="form-group col-12 col-sm-1">
+                            <button type="submit" class="btn btn-outline-primary btn-sm" (click)="updateBarChart(selectedFromYear.value,selectedToYear.value,selectedFilter.value)">Show</button>
+                        </div> 
+                        </div>
+                    <bar-chart [data]="barchart"></bar-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

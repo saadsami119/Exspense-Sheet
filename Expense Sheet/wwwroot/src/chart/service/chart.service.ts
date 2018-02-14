@@ -19,7 +19,7 @@ export default class ChartService {
                 title: piechart.title,
                 pieHole: piechart.pieHole,
                 is3D : true,
-                chartArea:{left:0,top:0,width:"100%",height:"100%"}
+                chartArea:{width:"100%",height:"100%"}
           };
           this.BuildChart(piechart.dataSet, chartFunc, options);
     }

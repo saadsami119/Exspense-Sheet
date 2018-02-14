@@ -6,9 +6,11 @@ import PieChart from "../chart/model/chart.model.piechart";
 import Tuple from "./model/transaction.model.tuple";
 import BarChart from "../chart/model/chart.model.barChart";
 import TransactionService from "../transactions/transaction.service";
-import Category from "../transactions/model/transaction.category.model";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/toPromise";
+import Category from "../transactions/model/transaction.category.model";
+import TransactionType from "../transactions/model/transaction.transactionType.model";
+import PaymentMethod from "../transactions/model/transaction.paymentMethod.model";
 declare var google:any;
 
 @Component({
@@ -18,91 +20,138 @@ declare var google:any;
 })
 
 export default class DashboardComponent implements OnInit {
-    public lastTenTransactions : Array<Transaction>;
+    public transactionsByDateRange : Array<Transaction>;
     public pieChart : PieChart;
     public barchart : BarChart;
     public months : Array<Tuple<number,string>>;
     public years : Array<number>;
     public dashboardForm: FormGroup;
+    public filters : Array<string>;
+    private _categories : Array<Category>;
+    private _transactionType : Array<TransactionType>;
+    private _paymentMethod : Array<PaymentMethod>;
 
     constructor(private _fb: FormBuilder,
                 private _dashboardService : DashboardService,
                 private _transactionService : TransactionService) {
-        this.lastTenTransactions = new Array<Transaction>();
+        this.transactionsByDateRange = new Array<Transaction>();
         this.months = new Array<Tuple<number,string>>();
         this.years = new Array<number>();
+        this._categories = new Array<Category>();
+        this._transactionType = new Array<TransactionType>();
+        this._paymentMethod = new Array<PaymentMethod>();
+
+        this.filters = ["Category", "Payment Method", "Transaction Type"];
     }
 
-    ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
 
         this.months = this._dashboardService.getAllMonthsName();
         this.years = this._dashboardService.getNextFiveYears();
 
         this.dashboardForm = this._fb.group({
-            dateFrom: new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
-            dateTo : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) )
+            dateFrom : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
+            dateTo : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
+            barChartDateFrom : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
+            barChartDateTo : new FormControl("", this.dateValidator(/^\d{2}.\d{2}.\d{4}$/i) ),
         });
 
-        this.FetchTransactionForRange();
-        this.UpdatePieChartForExpenses("December",2017);
+        this._categories = await this._dashboardService.getAllTransactionCategories();
+        this._transactionType = await this._dashboardService.getAllTransactionType();
+        this._paymentMethod = await this._dashboardService.getAllPaymentMethod();
 
-        this.UpdateBarChartForExpenses("1","1");
+        this.fetchTransactionForDateRange(new Date("11/11/2017"),new Date("01/02/2018"));
+
+        this.updatePieChartForExpenses("December",2017, "Category");
+
+        this.updateBarChart("2017","2019","payment method");
     }
 
-    public async FetchTransactionForRange(): Promise<void> {
-       let fromDateString : any = this.dashboardForm.get("dateFrom").value.split(".");
-        let  fromDate : Date = new Date(fromDateString[2], fromDateString[1] - 1, fromDateString[0]);
-        let toDateString :  any = this.dashboardForm.get("dateTo").value.split(".");
-        let  ToDate : Date = new Date(toDateString[2], toDateString[1] - 1, toDateString[0]);
+    public async displayTransactionsByDateRange(): Promise<void> {
+        let from :Date = this.convertStringToDateTime(this.dashboardForm.get("dateFrom").value);
+        let to : Date =  this.convertStringToDateTime(this.dashboardForm.get("dateTo").value);
 
-        fromDate = new Date("11/11/2017");
-        ToDate = new Date("01/02/2018");
-        this.lastTenTransactions = await this._dashboardService.getTransactionForDateRange(fromDate,ToDate);
-        this.lastTenTransactions.map(x=> x.date = new Date(x.date).toDateString());
-
+        this.fetchTransactionForDateRange(from,to);
     }
 
-    public async UpdatePieChartForExpenses(monthName : string, year : number): Promise<void> {
-        let month : number = this.months.find(x=> x.value === monthName).key;
-        var categories : string[] = (await this.getAllCategories()).map(x=> x.name);
-        let transactions : Transaction[] = await this._dashboardService.getTransactionForMonthYear(12,year);
-        let dataSetHeader : Array<string> = ["Category","Expenses"];
+    private async fetchTransactionForDateRange(from:Date, to:Date): Promise<void> {
+        this.transactionsByDateRange = await this._dashboardService.getTransactionForDateRange(from,to);
+        this.transactionsByDateRange.map(x=> x.date = new Date(x.date).toDateString());
+    }
+
+    public async updatePieChartForExpenses(monthName:string, year:number, filter:string): Promise<void> {
+        let selectedMonth : number = this.months.find(x=> x.value === monthName).key;
+        var collection : string[] = [];
+       if(filter.toLowerCase() === "payment method") {
+            collection  = this._paymentMethod.map(x=>x.name);
+            filter = "paymentMethod";
+       }
+       if(filter.toLowerCase() === "category") {
+            collection  = this._categories.map(x=>x.name);
+            filter = "category";
+        }
+
+        if(filter.toLowerCase() === "transaction type") {
+            collection = this._transactionType.map(x=>x.name);
+            filter = "transactionType";
+        }
+
+        let transactions : Transaction[] = await this._dashboardService.getTransactionForMonthYear(selectedMonth,year);
+        let dataSetHeader : Array<string> = [filter,"Expenses"];
         let dataSet : any[] =[dataSetHeader];
 
-        let transactionsSumByProperty : Array<Tuple<string,number>> = this.SumByProperty(transactions,"category");
+        let transactionsSumByProperty : Array<Tuple<string,number>> = this.getSum(transactions,filter);
 
-        for(let category of categories) {
-            let transaction : Tuple<string,number> =  transactionsSumByProperty.find(x=>x.key === category);
-            if(transaction === undefined) { dataSet.push([category,0]);} else { dataSet.push([transaction.key,transaction.value]);}
+        for(let item of collection) {
+            let transaction : Tuple<string,number> =  transactionsSumByProperty.find(x=>x.key === item);
+            if(transaction === undefined) { dataSet.push([item,0]);} else { dataSet.push([transaction.key,transaction.value]);}
         }
         this.pieChart = new PieChart("","myPieChart1",dataSet);
     }
 
-    public async UpdateBarChartForExpenses(fromYear : string, toYear : string): Promise<void> {
-        var categories : string[] = (await this.getAllCategories()).map(x=> x.name);
-        let header : Array<string> = ["Year"].concat(categories);
+    public async updateBarChart(from:string, to:string, filter:string): Promise<void> {
+        let fromYear : number = Number(from);
+        let toYear : number = Number(to);
+        var collection : string[] = [];
+
+        if(filter.toLowerCase() === "payment method") {
+            collection  = this._paymentMethod.map(x=>x.name);
+            filter = "paymentMethod";
+       }
+       if(filter.toLowerCase() === "category") {
+            collection  = this._categories.map(x=>x.name);
+            filter = "category";
+        }
+
+        if(filter.toLowerCase() === "transaction type") {
+            collection = this._transactionType.map(x=>x.name);
+            filter = "transactionType";
+        }
+
+        let header : Array<string> = ["Year"].concat(collection);
         let dataSet :  any[] = [header];
 
-        var transactions : Transaction[] = await this._dashboardService.getExpensesForYearRange(2015,2018);
+        var transactions : Transaction[] = await this._dashboardService.getExpensesForYearRange(fromYear,toYear);
 
-        for(let year: number = 2017; year <= 2018; year++) {
+        for(let year: number = fromYear; year <= toYear; year++) {
             let dataRow : Array<any> = [year.toString()];
             var transactionsPerYear : Transaction[] = transactions.filter(t => new Date(t.date).getFullYear() === year);
-            var transactionsPerYearSumByProperty : Array<Tuple<string,number>> = this.SumByProperty(transactionsPerYear,"category");
 
-            for(let category of categories) {
-               let transaction : Tuple<string,number> =  transactionsPerYearSumByProperty.find(x=>x.key === category);
+            var transactionsPerYearSumByProperty : Array<Tuple<string,number>> = this.getSum(transactionsPerYear,filter);
+
+            for(let item of collection) {
+               let transaction : Tuple<string,number> =  transactionsPerYearSumByProperty.find(x=>x.key === item);
                 if(transaction === undefined) {dataRow.push(0); } else {dataRow.push(transaction.value);}
             }
             dataSet.push(dataRow);
         }
-        this.barchart = new BarChart("Expenses","","barchart1",dataSet,"vertical");
+        this.barchart = new BarChart("","","barchart1",dataSet,"vertical");
     }
 
-    private SumByProperty(transactions : Array<Transaction> , propertyName : string): Array<Tuple<string,number>> {
+    private getSum(transactions : Array<Transaction> , propertyName : string): Array<Tuple<string,number>> {
 
         let groupedByCategory : Array<Tuple<string,number>> = new Array<Tuple<string,number>>();
-        let distinctValues : Array<string> = this.getDistinctValuesForProperty(transactions,propertyName);
+        let distinctValues : Array<string> = this.getDistinct(transactions,propertyName);
 
          for (let value of distinctValues) {
             let tuple : Tuple<string,number> = new Tuple<string,number>();
@@ -119,19 +168,18 @@ export default class DashboardComponent implements OnInit {
          return groupedByCategory;
     }
 
-    private getDistinctValuesForProperty<T>(list : Array<T> , distinctBy : string ): Array<any> {
-        let distinctCategories : Array<string> = new Array<string>();
+    private getDistinct<T>(list : Array<T> , distinctBy : string ): Array<any> {
+        let collection : Array<string> = new Array<string>();
             for(let item of list) {
                 var value : any = item[distinctBy];
-                if(distinctCategories.find(x=> x === value) != null) {
+                if(collection.find(x=> x === value) != null) {
                     continue;
                  }
-                 distinctCategories.push(value);
+                 collection.push(value);
             }
 
-        return distinctCategories;
+        return collection;
     }
-
      // tODO: MUST BE IN COMMON
      private dateValidator(regexPattern: RegExp): any {
         return (control: AbstractControl): {[key: string]: any} => {
@@ -140,8 +188,9 @@ export default class DashboardComponent implements OnInit {
         };
     }
 
-    private async getAllCategories(): Promise<Category[]> {
-        return this._transactionService.fetchAllCategories().toPromise();
+    private convertStringToDateTime(dateString: string): Date {
+        let splitedDate : any = dateString.split(".");
+        return new Date(splitedDate[2], splitedDate[1] - 1, splitedDate[0]);
     }
 }
 

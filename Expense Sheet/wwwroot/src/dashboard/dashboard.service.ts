@@ -3,6 +3,8 @@ import { Observable } from "rxjs/Observable";
 import HttpService from "../app/app.httpService";
 import Transaction from "./model/transaction.model";
 import Tuple from "./model/transaction.model.tuple";
+import Category from "../transactions/model/transaction.category.model";
+
 
 @Injectable()
 export default class DashboardService {
@@ -27,6 +29,21 @@ export default class DashboardService {
 
     public async getExpensesForYearRange(from : number, to : number): Promise<Transaction[]> {
         let url :string = "http://localhost:5000/api/transaction/year/from/"+from+"/to/"+to;
+        return this._httpService.sendGetRequest(url).toPromise();
+    }
+
+    public async getAllTransactionCategories(): Promise<Category[]> {
+        let url :string = "http://localhost:5000/api/transaction/categories";
+        return this._httpService.sendGetRequest(url).toPromise();
+    }
+
+    public async getAllPaymentMethod(): Promise<Category[]> {
+        let url :string = "http://localhost:5000/api/transaction/paymentmethods";
+        return this._httpService.sendGetRequest(url).toPromise();
+    }
+
+    public async getAllTransactionType(): Promise<Category[]> {
+        let url :string = "http://localhost:5000/api/transaction/types";
         return this._httpService.sendGetRequest(url).toPromise();
     }
 
